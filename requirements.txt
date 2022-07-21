@@ -1,0 +1,4 @@
+django-rest-registration==0.7.0
+Django==4.0.6
+djangorestframework==3.13.1
+
