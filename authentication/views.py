@@ -23,13 +23,6 @@ class UpdateProfileView(generics.UpdateAPIView):
     serializer_class = aps.UpdateUserSerializer
 
 
-@api_view(["GET"])
-@permission_classes([permissions.IsAuthenticated])
-def logout(request):
-    request.user.auth_token.delete()
 
-    logout(request)
-
-    return Response('User Logged out successfully')
 
 
