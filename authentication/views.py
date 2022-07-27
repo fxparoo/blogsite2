@@ -5,6 +5,7 @@ from rest_framework.response import Response
 from rest_framework_simplejwt.views import TokenObtainPairView
 import authentication.models as am
 import authentication.serializers as aps
+from blogapp.permissions import IsBlogPostOwner
 
 
 class LoginTokenViewSet(TokenObtainPairView):
@@ -19,7 +20,7 @@ class ChangePasswordView(generics.UpdateAPIView):
 
 class UpdateProfileView(generics.UpdateAPIView):
     queryset = am.CustomUser.objects.all()
-    permission_classes = (permissions.IsAuthenticated,)
+    permission_classes = [IsBlogPostOwner]
     serializer_class = aps.UpdateUserSerializer
 
 
