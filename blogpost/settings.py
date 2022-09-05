@@ -78,7 +78,6 @@ REST_REGISTRATION = {
     'PROFILE_SERIALIZER_CLASS': 'rest_registration.api.serializers.DefaultUserProfileSerializer',
     'REGISTER_SERIALIZER_PASSWORD_CONFIRM': True,
     'REGISTER_VERIFICATION_PERIOD': datetime.timedelta(days=5),
-    'REGISTER_EMAIL_VERIFICATION_URL': config('VERIFICATION_URL'),
     'REGISTER_VERIFICATION_ONE_TIME_USE': False,
     'VERIFICATION_FROM_EMAIL': 'akwuziefunds@gmail.com',
     'REGISTER_VERIFICATION_AUTO_LOGIN': False,
