@@ -5,7 +5,6 @@ from blogapp.models import BlogPost
 from api.models import CustomUser
 from blogapp.serializers import BlogPostSerializer
 from django.shortcuts import get_object_or_404
-from rest_framework import permissions
 from blogapp.permissions import IsBlogPostOwner
 
 
