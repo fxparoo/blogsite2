@@ -1,5 +1,5 @@
 from django.db import models
-from authentication.models import CustomUser
+from api.models import CustomUser
 
 
 class BlogPost(models.Model):

@@ -2,7 +2,7 @@ from rest_framework import viewsets, status
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.response import Response
 from blogapp.models import BlogPost
-from authentication.models import CustomUser
+from api.models import CustomUser
 from blogapp.serializers import BlogPostSerializer
 from django.shortcuts import get_object_or_404
 from rest_framework import permissions
@@ -11,7 +11,7 @@ from blogapp.permissions import IsBlogPostOwner
 
 class BlogPostViewSet(viewsets.ViewSet):
     serializer_class = BlogPostSerializer
-    permission_classes = [permissions.IsAuthenticated, IsBlogPostOwner]
+    permission_classes = [IsBlogPostOwner]
 
     def create(self, request, *args, **kwargs):
         email = request.auth.get('email')
@@ -35,15 +35,14 @@ class BlogPostViewSet(viewsets.ViewSet):
             return Response(serializer.data, status=status.HTTP_200_OK)
 
     def retrieve(self, request, pk=None, *args, **kwargs):
-        queryset = BlogPost.objects.all()
-        blogpost = get_object_or_404(queryset, pk=pk)
+        blogpost = get_object_or_404(BlogPost, pk=pk)
         serializer = BlogPostSerializer(blogpost)
         return Response(serializer.data)
 
     def update(self, request, pk=None, *args, **kwargs):
         try:
             email = request.auth.get('email')
-            blogpost = BlogPost.objects.get(pk=pk, owner__email=email)
+            blogpost = BlogPost.objects.get(pk=pk, author__email=email)
             serializer = BlogPostSerializer(blogpost, data=request.data)
             serializer.is_valid(raise_exception=True)
             serializer.save()
@@ -53,6 +52,6 @@ class BlogPostViewSet(viewsets.ViewSet):
 
     def delete(self, request, pk=id, *args, **kwargs):
         email = request.auth.get('email')
-        blogpost = BlogPostSerializer.objects.get(pk=pk, owner__email=email)
+        blogpost = BlogPost.objects.get(pk=pk, author__email=email)
         blogpost.delete()
-        return Response({"detail": "BlogPost deleted Succesfully."}, status=status.HTTP_204_NO_CONTENT)
+        return Response({"detail": "BlogPost deleted Succesfully."}, status=status.HTTP_200_OK)

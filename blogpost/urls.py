@@ -15,9 +15,11 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
-import authentication.views as apv
+import api.views as apv
 from rest_framework_simplejwt.views import TokenVerifyView
 from rest_framework_simplejwt.views import TokenRefreshView
+
+
 from rest_framework.routers import DefaultRouter
 from blogapp.views import BlogPostViewSet
 
@@ -26,13 +28,14 @@ router.register('blogposts', BlogPostViewSet, basename='blogposts')
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('', include(router.urls)),
     path('accounts/', include('rest_registration.api.urls')),
     path('account/token/', apv.LoginTokenViewSet.as_view(), name='token'),
     path('account/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
     path('account/token/verify/', TokenVerifyView.as_view(), name='token_verify'),
-    path('change-password/<int:pk>/', apv.ChangePasswordView.as_view(), name='token_verify'),
-    path('update_profile/<int:pk>/', apv.UpdateProfileView.as_view(), name='auth_update_profile'),
-    path('', include(router.urls))
+    # path('update_profile/<int:pk>/', apv.UpdateProfileView.as_view(), name='auth_update_profile')
+
 ]
+
 
 

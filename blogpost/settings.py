@@ -18,7 +18,6 @@ import datetime
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.0/howto/deployment/checklist/
 
@@ -29,7 +28,6 @@ SECRET_KEY = config('SECRET_KEY')
 DEBUG = True
 
 ALLOWED_HOSTS = []
-
 
 # Application definition
 
@@ -43,12 +41,11 @@ INSTALLED_APPS = [
     'rest_framework',
     'rest_registration',
     'rest_framework_simplejwt',
-    'authentication',
-    'blogapp',
+    'api',
+    'blogapp'
 ]
 
-AUTH_USER_MODEL = "authentication.CustomUser"
-
+AUTH_USER_MODEL = "api.CustomUser"
 
 REST_FRAMEWORK = {
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
@@ -63,15 +60,12 @@ REST_FRAMEWORK = {
 
 }
 
-
 SIMPLE_JWT = {
     'AUTH_HEADER_TYPES': ('Bearer',),
-    'ACCESS_TOKEN_LIFETIME': datetime.timedelta(),
-    'REFRESH_TOKEN_LIFETIME': datetime.timedelta(),
-
+    'ACCESS_TOKEN_LIFETIME': datetime.timedelta(minutes=30),
+    'REFRESH_TOKEN_LIFETIME': datetime.timedelta(days=3)
 
 }
-
 
 REST_REGISTRATION = {
     'REGISTER_SERIALIZER_CLASS': 'api.serializers.RegisterUserSerializer',
@@ -80,8 +74,9 @@ REST_REGISTRATION = {
     'CHANGE_PASSWORD_SERIALIZER_PASSWORD_CONFIRM': True,
     'REGISTER_VERIFICATION_ENABLED': False,
     'REGISTER_EMAIL_VERIFICATION_ENABLED': False,
-    'RESET_PASSWORD_VERIFICATION_ENABLED': False,
-    'REGISTER_SERIALIZER_PASSWORD_CONFIRM': False,
+    'RESET_PASSWORD_VERIFICATION_ENABLED': True,
+    'PROFILE_SERIALIZER_CLASS': 'rest_registration.api.serializers.DefaultUserProfileSerializer',
+    'REGISTER_SERIALIZER_PASSWORD_CONFIRM': True,
     'REGISTER_VERIFICATION_PERIOD': datetime.timedelta(days=5),
     'REGISTER_EMAIL_VERIFICATION_URL': config('VERIFICATION_URL'),
     'REGISTER_VERIFICATION_ONE_TIME_USE': False,
@@ -98,9 +93,10 @@ REST_REGISTRATION = {
 
 }
 
-
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    "whitenoise.middleware.WhiteNoiseMiddleware",
+    'corsheaders.middleware.CorsMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -108,7 +104,6 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
-
 
 ROOT_URLCONF = 'blogpost.urls'
 
@@ -130,14 +125,12 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'blogpost.wsgi.application'
 
-
 # Database
 # https://docs.djangoproject.com/en/4.0/ref/settings/#databases
 
 DATABASES = {
-  'default': dj_database_url.parse(config('DATABASE_URL'))
+    'default': dj_database_url.parse(config('DATABASE_URL'))
 }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/4.0/ref/settings/#auth-password-validators
@@ -157,7 +150,6 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-
 # Internationalization
 # https://docs.djangoproject.com/en/4.0/topics/i18n/
 
@@ -169,11 +161,11 @@ USE_I18N = True
 
 USE_TZ = True
 
-
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.0/howto/static-files/
 
 STATIC_URL = 'static/'
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.0/ref/settings/#default-auto-field
